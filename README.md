@@ -1,4 +1,4 @@
-# next-word-prediction
+# Next Word-Prediction
 This Repository is intended to Develop Word Prediction system.
 
 Implemented GloVe word embeddings with LSTM to get better result accuracy</br>
