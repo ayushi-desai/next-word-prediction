@@ -1,7 +1,7 @@
 # Next Word-Prediction
 This Repository is intended to Develop Word Prediction system.
 
-Implemented GloVe word embeddings with LSTM to get better result accuracy</br>
+Implemented GloVe word embeddings with LSTM and GRU to get better result accuracy</br>
 
 Steps to download glove embeddings:-</br>
 
