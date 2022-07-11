@@ -30,3 +30,7 @@ print_every: Number of steps to print training progress.</br>
 learning_rate:  Learning rate for the training. (default `1e-4`, can lower to `1e-5` if you have <1MB input data)</br>
 run_name: subfolder within `checkpoint` to save the model. This is useful if you want to work with multiple models (will also need to specify  `run_name` when loading the model)</br>
 overwrite: Set to `True` if you want to continue finetuning an existing model (w/ `restore_from='latest'`) without creating duplicate copies.</br> 
+
+---------------
+
+API for next word prdiction : http://127.0.0.1:5000/predict?value=I would like to ride
