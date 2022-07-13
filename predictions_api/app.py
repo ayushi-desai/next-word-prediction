@@ -29,10 +29,20 @@ def predict():
     nested_list_len = request.args.get("nested_list_len")
     
     if max_sequence_len is None or input_text is None or nested_list_len is None:
-        return "Argument not provided"
+        return jsonify(
+            message="Argument not provided",
+            category="error",
+            status=404
+        )
 
+    print(input_text)
     seeds_out = pred(input_text, int(max_sequence_len), int(nested_list_len))
-    return jsonify(seeds_out)
+    return jsonify(
+                message="Data fetched successfully.",
+                category="success",
+                data=seeds_out,
+                status=200
+            )
 
 
 
