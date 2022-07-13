@@ -35,7 +35,7 @@ def predict():
             status=404
         )
 
-    print(input_text)
+    #print(input_text)
     seeds_out = pred(input_text, int(max_sequence_len), int(nested_list_len))
     return jsonify(
                 message="Data fetched successfully.",
