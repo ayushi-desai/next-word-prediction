@@ -46,7 +46,7 @@ def pred(input_text, max_sequence_len, nested_list_len):
 			token_list = tokenizer.texts_to_sequences([seed_list[i]])[0]
 			
 			# Pad the sequences
-			token_list = pad_sequences([token_list], maxlen=max_sequence_len, padding='pre')
+			token_list = pad_sequences([token_list], maxlen=5, padding='pre')
 			
 			# Get the probabilities of predicting a word
 			predicted = model.predict(token_list, verbose=0)
@@ -55,10 +55,10 @@ def pred(input_text, max_sequence_len, nested_list_len):
 
 			# Get the actual word from the word index
 			output_word = tokenizer.index_word[indices]
-			seed_list[i] = seed_list[i] + output_word
+			seed_list[i] = seed_list[i]  +  " " +   output_word
 
 	return seed_list
 
 	
 if __name__=='__main__':
-    app.run()
+    app.run(debug=True)
