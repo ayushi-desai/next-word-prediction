@@ -55,7 +55,7 @@ def pred(input_text, max_sequence_len, nested_list_len):
 
 			# Get the actual word from the word index
 			output_word = tokenizer.index_word[indices]
-			seed_list[i] = seed_list[i]  +  " " +   output_word
+			seed_list[i] = seed_list[i] +  " " +  output_word
 
 	return seed_list
 
