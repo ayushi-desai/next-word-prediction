@@ -1,14 +1,15 @@
 import numpy as np
 import pickle
 from flask import Flask, request, jsonify, render_template
+from flask_cors import CORS
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import tensorflow as tf
 
 
 app=Flask(__name__)
+CORS(app)
 
 model = tf.keras.models.load_model("NextWord_Generation_EDA.h5")
-
 # loading
 with open('tokenizer.pickle', 'rb') as handle:
     tokenizer = pickle.load(handle)
@@ -29,10 +30,20 @@ def predict():
     nested_list_len = request.args.get("nested_list_len")
     
     if max_sequence_len is None or input_text is None or nested_list_len is None:
-        return "Argument not provided"
+        return jsonify(
+            message="Argument not provided",
+            category="error",
+            status=404
+        )
 
+    #print(input_text)
     seeds_out = pred(input_text, int(max_sequence_len), int(nested_list_len))
-    return jsonify(seeds_out)
+    return jsonify(
+                message="Data fetched successfully.",
+                category="success",
+                data=seeds_out,
+                status=200
+            )
 
 
 
@@ -46,7 +57,7 @@ def pred(input_text, max_sequence_len, nested_list_len):
 			token_list = tokenizer.texts_to_sequences([seed_list[i]])[0]
 			
 			# Pad the sequences
-			token_list = pad_sequences([token_list], maxlen=max_sequence_len, padding='pre')
+			token_list = pad_sequences([token_list], maxlen=5, padding='pre')
 			
 			# Get the probabilities of predicting a word
 			predicted = model.predict(token_list, verbose=0)
@@ -55,10 +66,10 @@ def pred(input_text, max_sequence_len, nested_list_len):
 
 			# Get the actual word from the word index
 			output_word = tokenizer.index_word[indices]
-			seed_list[i] = seed_list[i] + output_word
+			seed_list[i] = seed_list[i] +  " " +  output_word
 
 	return seed_list
 
 	
 if __name__=='__main__':
-    app.run()
+    app.run(debug=True)
