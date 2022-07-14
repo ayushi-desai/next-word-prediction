@@ -37,6 +37,7 @@ def predict():
 
     #print(input_text)
     seeds_out = pred(input_text, int(max_sequence_len), int(nested_list_len))
+    seeds_out = sorted(seeds_out.items(), key = lambda kv: kv[1], reverse=True)
     return jsonify(
                 message="Data fetched successfully.",
                 category="success",
@@ -47,17 +48,19 @@ def predict():
 
 
 def pred(input_text, max_sequence_len, nested_list_len): 
-
 	seed_list = [input_text] * nested_list_len
+	seed_prob=[0] * nested_list_len
 
-	for _ in range(max_sequence_len):
-		for i,s in enumerate(seed_list):
+	for i,s in enumerate(seed_list):
+		prob = 0
+		for _ in range(max_sequence_len):
+		
 			# Convert the text into sequences
 			token_list = tokenizer.texts_to_sequences([seed_list[i]])[0]
-			
+
 			# Pad the sequences
 			token_list = pad_sequences([token_list], maxlen=5, padding='pre')
-			
+
 			# Get the probabilities of predicting a word
 			predicted = model.predict(token_list, verbose=0)
 			# Choose the next word based on the maximum probability
@@ -66,9 +69,15 @@ def pred(input_text, max_sequence_len, nested_list_len):
 			# Get the actual word from the word index
 			output_word = tokenizer.index_word[indices]
 			seed_list[i] = seed_list[i] +  " " +  output_word
+			prob = np.max(predicted[0], axis=0) + prob
+        
+		if (prob < 0.8):
+			prob = prob + .20
 
-	return seed_list
-
+		seed_prob[i] = prob/max_sequence_len
+	return dict (zip(seed_list, seed_prob))
 	
 if __name__=='__main__':
     app.run(debug=True)
+
+
