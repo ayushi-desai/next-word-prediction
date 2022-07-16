@@ -48,3 +48,11 @@ h4 {
 	margin-top: 7px !important;
 }
 
+.dropdown-menu a{
+	display: flex;
+	justify-content: space-between;
+}
+
+.dropdown-menu a:not([href]):hover{
+	color: #FFF;
+}
