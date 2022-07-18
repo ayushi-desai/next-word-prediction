@@ -11,3 +11,5 @@ matplotlib>=1.4.3
 pandas>=0.19
 Cython>= 0.28.5
 Flask-Cors==1.10.3
+MySQL==8.0.29
+Flask-MySQL==1.5.2
