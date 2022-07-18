@@ -34,3 +34,13 @@ overwrite: Set to `True` if you want to continue finetuning an existing model (w
 ---------------
 
 API for next word prdiction : http://127.0.0.1:5000/predict?value=I would like to ride
+
+
+Task of Caching
+Intended creation and deployment of code that will store the next word prediction in user cache memory.
+The code will have no cache for a new word prediction, and this will be the first hit, which will be
+stored in client side cache so that the next time the same word is to be predicted, it will not be a
+new hit, but will instead use the cache memory to predict the word.
+Progressing work on client-side caching, but a new approach is using flask api to store
+the same cache in our database, which will be eliminated to improve processing speed and
+time.
