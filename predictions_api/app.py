@@ -1,15 +1,30 @@
 import numpy as np
 import pickle
+import json
 from flask import Flask, request, jsonify, render_template
+from flaskext.mysql import MySQL
 from flask_cors import CORS
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 import tensorflow as tf
+
 
 
 app=Flask(__name__)
 CORS(app)
 
 model = tf.keras.models.load_model("NextWord_Generation_EDA.h5")
+
+#Create an instance of MySQL
+mysql = MySQL()
+
+#Set database credentials in config.
+app.config['MYSQL_DATABASE_USER'] = 'root'
+app.config['MYSQL_DATABASE_PASSWORD'] = 'root'
+app.config['MYSQL_DATABASE_DB'] = 'nextwordpredection'
+app.config['MYSQL_DATABASE_HOST'] = 'localhost'
+
+#Initialize the MySQL extension
+mysql.init_app(app)
 # loading
 with open('tokenizer.pickle', 'rb') as handle:
     tokenizer = pickle.load(handle)
@@ -39,12 +54,32 @@ def predict():
     #print(input_text)
     seeds_out = pred(input_text, int(max_sequence_len), int(nested_list_len))
     seeds_out = sorted(seeds_out.items(), key = lambda kv: kv[1], reverse=True)
+    print("no data found to store in database") if (len(seeds_out) ==0) else store("ARJOO",input_text,seeds_out)
     return jsonify(
                 message="Data fetched successfully.",
                 category="success",
                 data=seeds_out,
                 status=200
             )
+
+#function to store all searched queries in the database
+def store(user,input_text,seeds_out):
+    try:
+            conn = mysql.connect()
+            cursor = conn.cursor()
+            json_string = json.dumps(seeds_out)
+            insert_predections = """INSERT INTO predections(user_name, input_text,data) 
+                                VALUES(%s, %s, %s)"""
+            cursor.execute(insert_predections, (user, input_text,json_string))
+            conn.commit()
+            response = jsonify('stored data into database.')
+    except Exception as e:
+            print(e)
+            response = jsonify('Failed to add data into database.')         
+    finally:
+            cursor.close()
+            conn.close()
+            return(response)
 
 
 
