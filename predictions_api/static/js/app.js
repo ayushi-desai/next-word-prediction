@@ -5,7 +5,7 @@ jQuery(document).ready(function () {
         events: {
         search: function (qry, callback) {
                // let's do a custom ajax call
-               let regex = /[^a-zA-Z]+/
+               let regex = /[^a-zA-Z ]+/
                   if(qry.match(regex))
                   {
                     callback([]);
