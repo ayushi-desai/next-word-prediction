@@ -13,3 +13,4 @@ Cython>= 0.28.5
 Flask-Cors==1.10.3
 MySQL==8.0.29
 Flask-MySQL==1.5.2
+Flask-Ext
