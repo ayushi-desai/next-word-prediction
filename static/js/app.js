@@ -5,13 +5,16 @@ jQuery(document).ready(function () {
         events: {
         search: function (qry, callback) {
                // let's do a custom ajax call
+
                let regex = /[^a-zA-Z ]+/
                   if(qry.match(regex))
                   {
                     callback([]);
                   }
-                  else
-                  {
+				  else if(localStorage.getItem(qry) !== null){
+					  console.log("-------------",localStorage.getItem(qry))
+					  callback(JSON.parse(localStorage.getItem(qry)));
+				  } else {
                     $.ajax({
                         url: 'http://localhost:5000/predict?value='+qry+'&max_sequence_len=3&nested_list_len=4' ,
                         type: "post",
@@ -24,9 +27,12 @@ jQuery(document).ready(function () {
                             $('.overlay').hide()
                         }
                     }).done(function (jsondata, textStatus, jqXHR) {
-                         callback($.map(jsondata['data'], function (item) {
+						 var call = $.map(jsondata['data'], function (item) {
                                return item.toString()
-                         }));
+                         })
+						 console.log(call)
+                         callback(call);
+						 localStorage.setItem(qry, JSON.stringify(call));
                     }).fail(function (jsondata, textStatus, jqXHR) {
                           console.log(jsondata)
                       });
